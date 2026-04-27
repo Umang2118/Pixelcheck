@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}PixelCheck - AI Image Detector{% endblock %}
+{% block meta_description %}Upload a food image and instantly detect whether it is AI-generated or authentic with
+PixelCheck.{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="page-hero" data-aos="fade-down">
+    <h1 data-aos="fade-up" data-aos-delay="100">AI Image Detector</h1>
+    <p data-aos="fade-up" data-aos-delay="200">Upload a food image to check whether it's AI-generated or authentic.</p>
+</section>
+
+<!-- Detector Card -->
+<div class="detector-card" data-aos="zoom-in" data-aos-delay="300">
+
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="file-drop" id="fileDrop">
+            <span class="upload-icon">📁</span>
+            <input type="file" name="file" id="fileInput" accept=".jpg,.jpeg,.png" required>
+            <label for="fileInput" class="file-label">Drag &amp; drop your image here</label>
+            <p class="file-hint">Supports JPG and PNG</p>
+            <label for="fileInput" class="file-choose-btn">Choose File</label>
+            <div class="selected-file" id="selectedFile"></div>
+        </div>
+
+        <button type="submit" class="analyze-btn" id="submitBtn">Analyze Image</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing image with AI…</p>
+        </div>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        {% set cls = result.class | lower %}
+        {% if 'fake' in cls or 'ai' in cls or 'generated' in cls %}
+        <span class="verdict-badge badge-ai">⚠ AI Generated</span>
+        {% else %}
+        <span class="verdict-badge badge-real">✓ Authentic Image</span>
+        {% endif %}
+
+        <h2>Detection Result: {{ result.class }}</h2>
+        <p class="result-accuracy">Confidence Score: <strong>{{ result.confidence }}</strong></p>
+        <img src="{{ url_for('static', filename='uploads/' + result.image_path) }}" alt="Analyzed image"
+            class="analyzed-img">
+
+        <a href="{{ url_for('history') }}" class="history-btn history-link-compact">
+            📊 View History & Details
+        </a>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('history') }}" class="history-btn" id="viewHistoryBtn">
+        🕘 View All Analysed Images
+    </a>
+
+</div>
+
+{% if recent_history %}
+<div class="recent-scans-header" data-aos="fade-up">
+    <h3>Recent Analyses</h3>
+    <a href="{{ url_for('history') }}" class="see-all-link">See All →</a>
+</div>
+<div class="recent-scans-grid">
+    {% for r in recent_history %}
+    <a href="{{ url_for('history') }}" class="recent-card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+        <img src="{{ url_for('static', filename='uploads/' + r.image_path) }}" class="recent-thumb" alt="Scan thumb">
+        <div class="recent-info">
+            <span class="label">{{ r.label }}</span>
+            <span class="meta">
+                <span class="verdict-dot {% if r.is_ai %}dot-ai{% else %}dot-real{% endif %}"></span>
+                {{ r.confidence }} • {{ r.analysed_at.strftime('%H:%M') if r.analysed_at else 'Recent' }}
+            </span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const fileDrop = document.getElementById('fileDrop');
+    const selectedFile = document.getElementById('selectedFile');
+    const uploadForm = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loading = document.getElementById('loading');
+
+    fileInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            selectedFile.textContent = '✓ Selected: ' + this.files[0].name;
+        }
+    });
+
+    fileDrop.addEventListener('click', function (e) {
+        if (e.target !== fileInput) fileInput.click();
+    });
+
+    fileDrop.addEventListener('dragover', function (e) {
+        e.preventDefault(); this.classList.add('drag-over');
+    });
+
+    fileDrop.addEventListener('dragleave', function () {
+        this.classList.remove('drag-over');
+    });
+
+    fileDrop.addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            selectedFile.textContent = '✓ Selected: ' + e.dataTransfer.files[0].name;
+        }
+    });
+
+    uploadForm.addEventListener('submit', function () {
+        if (fileInput.files.length > 0) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing…';
+            loading.classList.add('active');
+        }
+    });
+</script>
+{% endblock %}

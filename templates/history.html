@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}PixelCheck - Analysis History{% endblock %}
+{% block meta_description %}View all your previously analysed food images and their AI detection results.{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+
+{% block content %}
+<!-- Hero -->
+<section class="page-hero" style="position: relative;">
+    <a href="{{ url_for('predict') }}" class="back-btn" id="backToDetectorBtn" style="position: absolute; top: 40px; left: 5%; font-size: 22px; padding: 8px 16px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">←</a>
+    <div class="hero-badge">🕘 Analysis History</div>
+    <h1>Your Analysed Images</h1>
+    <p>All images you have scanned with PixelCheck — newest first.</p>
+</section>
+
+<div class="history-container">
+
+    <!-- Stats -->
+
+    {% if records %}
+    <div class="stats-bar">
+        <div class="stat-chip">Total: <span>{{ records | length }}</span></div>
+        <div class="stat-chip">AI-Generated: <span>{{ records | selectattr('is_ai') | list | length }}</span></div>
+        <div class="stat-chip">Authentic: <span>{{ records | rejectattr('is_ai') | list | length }}</span></div>
+    </div>
+
+    <!-- Grid -->
+    <div class="history-grid">
+        {% for r in records %}
+        <div class="history-card" style="--delay: {{ loop.index0 }}">
+            <div class="card-img-wrap">
+                <img src="{{ url_for('static', filename='uploads/' + r.image_path) }}"
+                     alt="{{ r.image_path }}"
+                     onerror="this.src='https://placehold.co/400x180/f5f5f5/ccc?text=Image+Not+Found'">
+                {% if r.is_ai %}
+                    <span class="card-verdict verdict-ai">⚠ AI Generated</span>
+                {% else %}
+                    <span class="card-verdict verdict-real">✓ Authentic</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="card-label">{{ r.label }}</div>
+                <div class="card-conf">Confidence: <strong>{{ r.confidence }}</strong></div>
+                <div class="card-meta">
+                    🕒 {{ r.analysed_at.strftime('%d %b %Y, %I:%M %p') if r.analysed_at else 'N/A' }}
+                </div>
+                <div class="card-filename">📄 {{ r.image_path }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <h2>No Analyses Yet</h2>
+        <p>You haven't analysed any images yet. Upload your first image to get started!</p>
+        <a href="{{ url_for('predict') }}" class="cta-btn" id="startAnalysingBtn">Start Analysing</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

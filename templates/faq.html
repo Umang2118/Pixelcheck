@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ - PixelCheck{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+
+{% block content %}
+<section class="faq" id="faq">
+    <h3>Frequently Asked Questions</h3>
+    <div class="faq-container">
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How accurate is PixelCheck's AI detection?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                PixelCheck achieves an industry-leading 99.2% accuracy rate. Our underlying Microsoft CvT vision transformer is specifically fine-tuned on food datasets to spot pixel-level anomalies left by diffusion models (like fake bugs or synthetic mold).
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What image formats are supported?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                We support the formats typically uploaded by customers during refund claims: JPG, JPEG, and PNG. We ensure compatibility with standard mobile phone captures up to 10MB per image.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How long does the analysis take?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                In the fast-paced world of food delivery, every second counts. Each customer refund claim image is fully analyzed and classified in under 2 seconds.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Are our customers' images kept completely private?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Absolutely. We guarantee complete privacy. Uploaded food/claim images are analyzed entirely in memory and are never stored long-term or used to train third-party systems.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Can I integrate PixelCheck into my food delivery app?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Yes! We offer a lightweight RESTful API designed specifically to snap right into existing platforms like Swiggy, Zomato, or your own enterprise delivery ecosystem.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What happens if the AI is unsure about a claim?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Every API response includes a percentage-based confidence score. For high-value refund claims that yield confidence scores below 95%, we recommend escalating the photo to a human support agent for manual review.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>Can you handle thousands of refund claims per minute?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Yes, our enterprise API architecture is horizontally scalable, designed to effortlessly handle massive regional or national spikes in lunchtime or dinner rush orders without throttling.
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // FAQ Toggle Functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const faqItem = question.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        });
+    });
+</script>
+{% endblock %}

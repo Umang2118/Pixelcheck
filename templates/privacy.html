@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy - PixelCheck{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+{% block content %}
+<section class="legal-hero">
+    <h1>Privacy Policy</h1>
+    <p>Last Updated: January 2026</p>
+</section>
+
+<section class="legal-body">
+    <div class="legal-card">
+        <h2>1. What We Collect</h2>
+        <p>When you or an integrated platform (e.g. Swiggy, Zomato) sends an image to the <code>/api/predict</code> endpoint, we temporarily process the image data in memory solely to return a classification result. We also collect:</p>
+        <p>• Basic API request logs (timestamp, endpoint, response code) for service monitoring.<br>
+        • Account details (email, hashed password) for registered web-app users.</p>
+
+        <h2>2. Data Retention</h2>
+        <p>Uploaded food images are processed entirely in server memory and are <strong>never written to permanent storage</strong> by the API. Uploaded images via the web UI are stored temporarily in the uploads folder and may be purged periodically. We do not use consumer food photos to retrain our models without explicit enterprise consent.</p>
+
+        <h2>3. Data Sharing</h2>
+        <p>We do not sell, rent, or share your data with any third party for marketing purposes. Aggregated, anonymised statistics (e.g., monthly fraud detection rates) may be published for research purposes.</p>
+
+        <h2>4. Security</h2>
+        <p>All traffic between clients and the PixelCheck API is secured via HTTPS/TLS 1.3. Passwords are hashed using bcrypt before storage. We conduct regular security audits of our cloud infrastructure.</p>
+
+        <h2>5. Your Rights</h2>
+        <p>You may request deletion of your account and associated data at any time by contacting <a href="mailto:privacy@pixelcheck.ai" class="email-link">privacy@pixelcheck.ai</a>.</p>
+
+        <h2>6. Changes to this Policy</h2>
+        <p>We will notify API partners and registered users by email at least 14 days before any material changes to this Privacy Policy take effect.</p>
+    </div>
+</section>
+{% endblock %}

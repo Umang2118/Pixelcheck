@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PixelCheck - AI Food Image Detection{% endblock %}</title>
+    <meta name="description"
+        content="{% block meta_description %}PixelCheck — Detect AI-generated food images instantly with advanced neural networks. Protect your platform from fake images.{% endblock %}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    {% block extra_styles %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+    <!-- ── Navbar ──────────────────────────────────────────────────── -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <a href="{{ url_for('index') }}" class="nav-brand">
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="PixelCheck Logo">
+            <span class="nav-brand-name">PixelCheck</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('faq') }}">FAQ</a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('api_docs') }}">API Docs</a>
+            <a href="{{ url_for('profile') }}" title="My Profile"
+                style="width: 40px; height: 40px; border-radius: 50%; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; text-decoration: none; margin-left: auto;">
+                {{ (current_user.name or current_user.email)[0] | upper }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="nav-btn nav-btn-outline">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-btn nav-btn-filled">Get Started</a>
+            {% endif %}
+        </div>
+
+        <div class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- ── Flash Messages ─────────────────────────────────────────── -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">
+            {% if category == 'error' %}⚠{% elif category == 'success' %}✓{% else %}ℹ{% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- ── Page Content ───────────────────────────────────────────── -->
+    <main class="{% block main_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ── Footer ────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="PixelCheck Logo">
+                <span class="footer-brand-name">PixelCheck</span>
+                <p>AI-powered image authentication that restores trust in digital marketplaces and food delivery
+                    platforms.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="{{ url_for('faq') }}">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <ul>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="{{ url_for('terms') }}">Terms of Service</a></li>
+                    <li><a href="{{ url_for('privacy') }}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2025 <span>PixelCheck</span>. All rights reserved.</span>
+            <div class="footer-bottom-links">
+                <a href="{{ url_for('terms') }}">Terms</a>
+                <a href="{{ url_for('privacy') }}">Privacy</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── Mobile Nav Script ──────────────────────────────────────── -->
+    <script>
+        const toggle = document.getElementById('navToggle');
+        const navLinks = document.querySelector('.nav-links');
+        toggle.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '70px';
+            navLinks.style.left = '0';
+            navLinks.style.right = '0';
+            navLinks.style.background = '#fff';
+            navLinks.style.padding = '20px 5%';
+            navLinks.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)';
+            navLinks.style.zIndex = '999';
+        });
+
+        // Auto-hide flash messages after 3 seconds
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-msg, .card-flash');
+            flashMessages.forEach(msg => {
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                setTimeout(() => msg.remove(), 500);
+            });
+        }, 3000);
+    </script>
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>

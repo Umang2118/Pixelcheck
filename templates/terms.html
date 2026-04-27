@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service - PixelCheck{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+{% block content %}
+<section class="legal-hero">
+    <h1>Terms of Service</h1>
+    <p>Last Updated: January 2026</p>
+</section>
+
+<section class="legal-body">
+    <div class="legal-card">
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing PixelCheck's platform, API, or services, you agree to be bound by these Terms of Service. If you are using PixelCheck on behalf of a company (such as Swiggy or Zomato), you represent that you have the authority to bind that company to these terms.</p>
+
+        <h2>2. Use of the API</h2>
+        <p>The PixelCheck API is intended exclusively for legitimate fraud detection purposes in food delivery, e-commerce, and related digital marketplace applications. Prohibited uses include:</p>
+        <ul>
+            <li>Using the API to surveil individuals without consent</li>
+            <li>Reverse engineering the underlying AI model</li>
+            <li>Saturating the infrastructure with automated bulk requests without an enterprise agreement</li>
+            <li>Reselling API access to third parties without prior written consent</li>
+        </ul>
+
+        <h2>3. Accuracy Disclaimer</h2>
+        <p>PixelCheck's AI model achieves a 99.2% accuracy rate on our internal validation datasets. However, no AI system is infallible. PixelCheck provides confidence scores alongside each prediction. We strongly recommend that any result with a confidence score below 90% be reviewed by a human agent before acting on it.</p>
+        <p>PixelCheck shall not be held liable for refund decisions made autonomously based solely on our API output.</p>
+
+        <h2>4. Intellectual Property</h2>
+        <p>All model weights, code, and documentation are the intellectual property of PixelCheck. You may not copy, modify, or redistribute these materials without explicit written permission.</p>
+
+        <h2>5. Service Availability</h2>
+        <p>We target 99.9% uptime but do not guarantee uninterrupted service. Planned maintenance windows will be communicated 48 hours in advance via email to registered API partners.</p>
+
+        <h2>6. Modifications to Terms</h2>
+        <p>We reserve the right to update these Terms at any time. Continued use of the service after changes are published constitutes acceptance of the new terms.</p>
+    </div>
+</section>
+{% endblock %}

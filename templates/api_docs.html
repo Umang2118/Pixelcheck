@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block title %}API Integration Docs - PixelCheck{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+
+{% block content %}
+<section class="docs-hero">
+    <h1>PixelCheck API Docs</h1>
+    <p>Integrate real-time AI fraud detection directly into your Swiggy, Zomato, or any delivery platform's claim-review
+        backend.</p>
+    <div class="badge-row">
+        <span class="badge badge-green">✓ REST API</span>
+        <span class="badge badge-blue">JSON Responses</span>
+        <span class="badge badge-dark">Base URL: https://www.pixel-check.com</span>
+    </div>
+</section>
+
+<div class="docs-inner-padding">
+    <div class="docs-body">
+        <!-- Sidebar -->
+        <div class="docs-sidebar">
+            <p class="sidebar-title">Contents</p>
+            <ul class="sidebar-menu">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#endpoint">POST /api/predict</a></li>
+                <li><a href="#request">Request Format</a></li>
+                <li><a href="#response">Response Format</a></li>
+                <li><a href="#errors">Error Codes</a></li>
+                <li><a href="#examples">Code Examples</a></li>
+                <li><a href="#workflow">Integration Workflow</a></li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="docs-content">
+
+            <section id="overview">
+                <h2>🎯 Overview</h2>
+                <p>The PixelCheck API allows delivery platforms to automatically verify whether a customer-submitted
+                    food claim image is genuine or AI-generated. When a customer opens a refund claim, your backend
+                    calls our API with the uploaded image. We return a <code>class</code>, <code>confidence</code>
+                    score, and a <code>recommendation</code> (<code>APPROVE_CLAIM</code> or <code>REJECT_CLAIM</code>)
+                    so your system can act immediately.</p>
+                <p>All images are processed in memory and are <strong>never stored</strong> on our servers. Average
+                    response time is under 2 seconds.</p>
+            </section>
+
+            <section id="endpoint">
+                <h2>📡 Endpoint</h2>
+                <div class="endpoint-line">
+                    <span class="method">POST</span>
+                    <code>/api/predict</code>
+                </div>
+                <p>Accepts a multipart form file upload and returns a JSON classification result.</p>
+            </section>
+
+            <section id="request">
+                <h2>📤 Request Format</h2>
+                <p><strong>Content-Type:</strong> <code>multipart/form-data</code></p>
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>file</code></td>
+                        <td>File</td>
+                        <td>✓ Yes</td>
+                        <td>The image to classify. Supports JPG, JPEG, PNG. Max 10 MB.</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="response">
+                <h2>📥 Response Format</h2>
+                <p><span class="response-badge r200">200 OK</span></p>
+                <pre>{
+  <span class="keyword">"class"</span>: <span class="string">"AI Generated"</span>,
+  <span class="keyword">"is_fraud"</span>: <span class="number">true</span>,
+  <span class="keyword">"confidence"</span>: <span class="number">97.43</span>,
+  <span class="keyword">"confidence_display"</span>: <span class="string">"97.43%"</span>,
+  <span class="keyword">"filename"</span>: <span class="string">"claim_photo.jpg"</span>,
+  <span class="keyword">"recommendation"</span>: <span class="string">"REJECT_CLAIM"</span>
+}</pre>
+
+                <table>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>class</code></td>
+                        <td>string</td>
+                        <td><code>"AI Generated"</code> or <code>"Real"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>is_fraud</code></td>
+                        <td>boolean</td>
+                        <td><code>true</code> if the image is detected as AI-generated</td>
+                    </tr>
+                    <tr>
+                        <td><code>confidence</code></td>
+                        <td>float</td>
+                        <td>Model confidence from 0.00 to 100.00</td>
+                    </tr>
+                    <tr>
+                        <td><code>confidence_display</code></td>
+                        <td>string</td>
+                        <td>Human-readable confidence string</td>
+                    </tr>
+                    <tr>
+                        <td><code>filename</code></td>
+                        <td>string</td>
+                        <td>Sanitized filename of the uploaded image</td>
+                    </tr>
+                    <tr>
+                        <td><code>recommendation</code></td>
+                        <td>string</td>
+                        <td><code>REJECT_CLAIM</code> or <code>APPROVE_CLAIM</code></td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="errors">
+                <h2>⚠️ Error Codes</h2>
+                <table>
+                    <tr>
+                        <th>Code</th>
+                        <th>Meaning</th>
+                        <th>Body</th>
+                    </tr>
+                    <tr>
+                        <td><span class="response-badge r400">400</span></td>
+                        <td>No file uploaded or empty filename</td>
+                        <td><code>{"error": "No file part or empty filename"}</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="response-badge r500">503</span></td>
+                        <td>Model not loaded on server</td>
+                        <td><code>{"error": "Model not loaded — weights missing on server"}</code></td>
+                    </tr>
+                    <tr>
+                        <td><span class="response-badge r500">500</span></td>
+                        <td>Internal processing error</td>
+                        <td><code>{"error": "&lt;exception message&gt;"}</code></td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="examples">
+                <h2>💻 Code Examples</h2>
+                <div class="integration-grid">
+                    <div class="integration-card" style="cursor: pointer;"
+                        onclick="document.getElementById('python-api').scrollIntoView({behavior: 'smooth'})"><span
+                            class="lang-icon">🐍</span>Python</div>
+                    <div class="integration-card" style="cursor: pointer;"
+                        onclick="document.getElementById('js-api').scrollIntoView({behavior: 'smooth'})"><span
+                            class="lang-icon">🟨</span>JavaScript</div>
+                    <div class="integration-card" style="cursor: pointer;"
+                        onclick="document.getElementById('java-api').scrollIntoView({behavior: 'smooth'})"><span
+                            class="lang-icon">☕</span>Java</div>
+                    <div class="integration-card" style="cursor: pointer;"
+                        onclick="document.getElementById('curl-api').scrollIntoView({behavior: 'smooth'})"><span
+                            class="lang-icon">⚡</span>cURL</div>
+                </div>
+
+                <p class="code-sample-title" id="python-api"><strong>Python (requests)</strong></p>
+                <pre><span class="keyword">import</span> requests
+
+<span class="keyword">with</span> open(<span class="string">"claim_photo.jpg"</span>, <span class="string">"rb"</span>) <span class="keyword">as</span> f:
+    response = requests.post(
+        <span class="string">"https://www.pixel-check.com/api/predict"</span>,
+        files={<span class="string">"file"</span>: (<span class="string">"claim_photo.jpg"</span>, f, <span class="string">"image/jpeg"</span>)}
+    )
+
+result = response.json()
+<span class="keyword">if</span> result[<span class="string">"is_fraud"</span>]:
+    print(<span class="string">f"Claim REJECTED: {result['class']} ({result['confidence_display']})"</span>)
+<span class="keyword">else</span>:
+    print(<span class="string">f"Claim APPROVED: Image appears real ({result['confidence_display']})"</span>)</pre>
+
+                <p id="curl-api"><strong>cURL</strong></p>
+                <pre>curl -X POST \
+  -F <span class="string">"file=@/path/to/claim_photo.jpg"</span> \
+  https://www.pixel-check.com/api/predict</pre>
+
+                <p id="js-api"><strong>JavaScript (fetch)</strong></p>
+                <pre><span class="keyword">const</span> formData = <span class="keyword">new</span> FormData();
+formData.append(<span class="string">'file'</span>, imageFile);
+
+<span class="keyword">const</span> res = <span class="keyword">await</span> fetch(<span class="string">'https://www.pixel-check.com/api/predict'</span>, {
+  method: <span class="string">'POST'</span>,
+  body: formData
+});
+<span class="keyword">const</span> result = <span class="keyword">await</span> res.json();
+console.log(result.recommendation); <span class="string">// "REJECT_CLAIM" or "APPROVE_CLAIM"</span></pre>
+
+                <p id="java-api"><strong>Java (OkHttp)</strong></p>
+                <pre><span class="keyword">import</span> okhttp3.*;
+<span class="keyword">import</span> java.io.File;
+
+<span class="keyword">public class</span> PixelCheckClient {
+    <span class="keyword">public static void</span> main(String[] args) <span class="keyword">throws</span> Exception {
+        OkHttpClient client = <span class="keyword">new</span> OkHttpClient().newBuilder().build();
+        
+        RequestBody body = <span class="keyword">new</span> MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart(<span class="string">"file"</span>, <span class="string">"claim_photo.jpg"</span>,
+                        RequestBody.create(MediaType.parse(<span class="string">"image/jpeg"</span>), 
+                        <span class="keyword">new</span> File(<span class="string">"/path/to/claim_photo.jpg"</span>)))
+                .build();
+                
+        Request request = <span class="keyword">new</span> Request.Builder()
+                .url(<span class="string">"https://www.pixel-check.com/api/predict"</span>)
+                .method(<span class="string">"POST"</span>, body)
+                .build();
+                
+        Response response = client.newCall(request).execute();
+        System.out.println(response.body().string());
+    }
+}</pre>
+            </section>
+
+            <section id="workflow">
+                <h2>🔄 Integration Workflow for Swiggy / Zomato</h2>
+                <p>Here is the recommended end-to-end claim verification workflow for delivery platforms:</p>
+                <ol class="best-practices-list">
+                    <li><strong>Customer opens a refund claim</strong> and uploads one or more food images.</li>
+                    <li><strong>Your backend receives the image</strong> (before it reaches the human support agent).
+                    </li>
+                    <li><strong>Your backend calls</strong> <code>POST /api/predict</code> with the image.</li>
+                    <li><strong>PixelCheck responds</strong> in &lt;2 seconds with <code>recommendation</code>.</li>
+                    <li>If <code>REJECT_CLAIM</code>: auto-flag or auto-deny the claim with a user-facing explanation.
+                    </li>
+                    <li>If <code>APPROVE_CLAIM</code> and confidence &gt; 90%: pass to a support agent as pre-verified
+                        genuine.</li>
+                    <li>If confidence &lt; 90%: always escalate to a human agent for review.</li>
+                </ol>
+            </section>
+
+        </div><!-- /docs-content -->
+    </div><!-- /docs-body -->
+</div>
+{% endblock %}

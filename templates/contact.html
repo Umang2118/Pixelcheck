@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Contact Us - PixelCheck{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+
+{% block content %}
+<section class="contact-hero">
+    <h1>Get in Touch</h1>
+    <p>Whether you're integrating our API or have a question — we're here to help.</p>
+</section>
+
+<section class="contact-body">
+    <div class="contact-layout">
+        <div class="contact-info">
+            <h2>Let's Talk</h2>
+            <p>Reach out to us if you're a platform like Swiggy or Zomato looking to integrate fraud detection, or if
+                you're an enterprise with custom needs.</p>
+
+            <div class="info-item">
+                <div class="info-icon">📧</div>
+                <div class="info-text">
+                    <h4>Email Us</h4>
+                    <p><a href="mailto:support@pixelcheck.ai">support@pixelcheck.ai</a></p>
+                    <p><a href="mailto:api@pixelcheck.ai">api@pixelcheck.ai</a></p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📞</div>
+                <div class="info-text">
+                    <h4>Call Us</h4>
+                    <p><a href="tel:+916394010232">+91 6394010232</a></p>
+                    <p>Mon–Fri, 9 AM – 6 PM IST</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📍</div>
+                <div class="info-text">
+                    <h4>Visit Us</h4>
+                    <p>Sector 8, Indra nagar<br>Lucknow, Uttar Pradesh 226028, India</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-card">
+            <h3>Send Us a Message</h3>
+            <form method="POST" action="{{ url_for('contact') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name *</label>
+                        <input type="text" name="company" placeholder="Swiggy / Zomato / ..." required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" name="email" placeholder="you@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Enquiry Type</label>
+                    <select name="subject" required>
+                        <option value="" disabled selected>Select</option>
+                        <option value="api">API Integration</option>
+                        <option value="pricing">Pricing & Plans</option>
+                        <option value="support">Technical Support</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Message *</label>
+                    <textarea name="message" placeholder="Tell us about your use case…" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Send Message →</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

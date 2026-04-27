@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}PixelCheck - AI Image Detection{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-badge" data-aos="fade-down" data-aos-delay="100" style="transform: translateY(-20px); margin: 0 auto 10px auto; display: inline-flex; justify-content: center; text-align: center;">✦ Build for Swiggy & Zomato Integration</div>
+    <h2 data-aos="fade-up" data-aos-delay="200">Detect AI-Generated<br>Fraud Instantly</h2>
+    <p data-aos="fade-up" data-aos-delay="300">Restoring trust in digital transactions for platforms like Zomato and Swiggy with real-time image authenticity
+        verification.</p>
+    <div class="cta-buttons" data-aos="zoom-in" data-aos-delay="400">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('predict') }}" class="btn btn-white">Go to Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-white">Get Started Free</a>
+        <a href="{{ url_for('predict') }}" class="btn btn-outline">Try Demo</a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <h3 data-aos="fade-up">Why PixelCheck?</h3>
+    <p class="features-subtitle" data-aos="fade-up" data-aos-delay="100">Enterprise-grade detection for food delivery, e-commerce, and beyond.</p>
+
+    <div class="feature-grid">
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon">🔍</div>
+            <h4>Instant Analysis</h4>
+            <p>Upload any image and get AI/real classification results in seconds with our advanced neural networks.</p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon">🛡️</div>
+            <h4>Fraud Prevention</h4>
+            <p>Catch fake product images before they reach your customers and protect your brand reputation.</p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon">📊</div>
+            <h4>Confidence Scores</h4>
+            <p>Every prediction comes with a detailed accuracy confidence metric for informed decision-making.</p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon">⚡</div>
+            <h4>Lightning Fast</h4>
+            <p>Process thousands of images per hour with our optimized cloud infrastructure.</p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon">🔒</div>
+            <h4>Secure & Private</h4>
+            <p>Your images are encrypted and never stored. Complete privacy guaranteed for all uploads.</p>
+        </div>
+
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon">🌐</div>
+            <h4>API Integration</h4>
+            <p>Seamlessly integrate PixelCheck into your existing workflow with our RESTful API.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats" data-aos="fade-up">
+    <div class="stats-grid">
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+            <h3>99.2%</h3>
+            <p>Accuracy Rate</p>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+            <h3>2M+</h3>
+            <p>Images Analyzed</p>
+        </div>
+        <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+            <h3>&lt; 2s</h3>
+            <p>Processing Time</p>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- How It Works -->
+<section class="how-it-works" id="how-it-works">
+    <h3 data-aos="fade-up">How It Works</h3>
+    <div class="steps-grid">
+        <div class="step-card" data-aos="fade-right" data-aos-delay="100">
+            <div class="step-number">1</div>
+            <h4>Upload Image</h4>
+            <p>Simply drag and drop or select any image file (JPG, PNG) that you want to verify for authenticity.</p>
+        </div>
+        <div class="step-card" data-aos="fade-right" data-aos-delay="200">
+            <div class="step-number">2</div>
+            <h4>AI Analysis</h4>
+            <p>Our advanced neural networks analyze pixel patterns, artifacts, and generation signatures in
+                milliseconds.</p>
+        </div>
+        <div class="step-card" data-aos="fade-right" data-aos-delay="300">
+            <div class="step-number">3</div>
+            <h4>Get Results</h4>
+            <p>Receive instant classification with a confidence score showing whether the image is AI-generated or
+                authentic.</p>
+        </div>
+        <div class="step-card" data-aos="fade-right" data-aos-delay="400">
+            <div class="step-number">4</div>
+            <h4>Take Action</h4>
+            <p>Use the results to make informed decisions, flag suspicious content, or approve legitimate listings.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="use-cases">
+    <h3 data-aos="fade-up">Who Benefits from PixelCheck?</h3>
+    <div class="use-cases-grid">
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="100">
+            <h4>🍕 Food Delivery Platforms</h4>
+            <p>Prevent restaurants from using fake AI-generated food images that misrepresent their actual products.
+                Ensure customers see authentic photos of meals.</p>
+        </div>
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="200">
+            <h4>🛒 E-Commerce Marketplaces</h4>
+            <p>Detect fraudulent product listings with AI-generated images. Protect buyers from scams and maintain
+                marketplace integrity.</p>
+        </div>
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="300">
+            <h4>🏨 Travel & Hospitality</h4>
+            <p>Verify that hotel and rental property photos are genuine, preventing customers from being misled by fake
+                images.</p>
+        </div>
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="100">
+            <h4>📱 Social Media Platforms</h4>
+            <p>Identify and flag synthetic media, deepfakes, and AI-generated content to combat misinformation and
+                fraud.</p>
+        </div>
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="200">
+            <h4>📰 News & Media Organizations</h4>
+            <p>Validate image authenticity before publication to maintain journalistic integrity and fact-checking
+                standards.</p>
+        </div>
+        <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="300">
+            <h4>🏢 Enterprise Security</h4>
+            <p>Protect corporate communications and verify employee-submitted documents against AI-generated forgeries.
+            </p>
+        </div>
+    </div>
+</section>
+<!-- CTA Section -->
+<section class="cta-section" data-aos="fade-up">
+    <h3 data-aos="fade-up" data-aos-delay="100">Ready to Verify Image Authenticity?</h3>
+    <p data-aos="fade-up" data-aos-delay="200">Join us to Protect your Businesses from AI-generated Fraud </p>
+    <div data-aos="zoom-in" data-aos-delay="300">
+    {% if current_user.is_authenticated %}
+    <a href="{{ url_for('predict') }}" class="btn btn-white">Go to Dashboard</a>
+    {% else %}
+    <a href="{{ url_for('register') }}" class="btn btn-white">Start Free Trial</a>
+    {% endif %}
+    </div>
+</section>    
+
+<script>
+</script>
+{% endblock %}

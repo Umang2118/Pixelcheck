@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}PixelCheck - Create Account{% endblock %}
+{% block meta_description %}Join PixelCheck and start detecting AI-generated food images. Free to get started, no credit card required.{% endblock %}
+
+{% block body_class %}auth-page-body{% endblock %}
+{% block main_class %}auth-page-main{% endblock %}
+
+{% block extra_styles %}
+{% endblock %}
+
+{% block content %}
+<div class="auth-card" data-aos="zoom-in" data-aos-duration="600">
+    <!-- Brand Side -->
+    <div class="brand-panel">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="PixelCheck Logo">
+        <h1>PixelCheck</h1>
+        <p>Create your account and start verifying image authenticity today.</p>
+        <ul class="features-list">
+            <li>Instant AI detection</li>
+            <li>99.2% accuracy rate</li>
+            <li>Secure &amp; encrypted</li>
+            <li>Free to get started</li>
+        </ul>
+    </div>
+
+    <!-- Form Side -->
+    <div class="form-panel">
+        <h2>Create Account</h2>
+        <p class="form-subtitle">Join PixelCheck — no credit card required</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="card-flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="pw-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Min 8 chars, include letters, numbers &amp; symbols" required autocomplete="new-password" minlength="8">
+                    <button type="button" class="pw-toggle" id="regPwToggle" aria-label="Toggle password visibility">
+                        <svg id="regEyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="confirm_password">Confirm Password</label>
+                <div class="pw-wrapper">
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required autocomplete="new-password" minlength="8">
+                    <button type="button" class="pw-toggle" id="regConfirmPwToggle" aria-label="Toggle confirm password visibility">
+                        <svg id="regConfirmEyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn" id="registerBtn">Create Account</button>
+
+            <p class="legal-note">By signing up, you agree to our <a href="{{ url_for('terms') }}">Terms of Service</a> &amp; <a href="{{ url_for('privacy') }}">Privacy Policy</a></p>
+        </form>
+
+        <p class="switch-link">Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    (function () {
+        var eyeOpen  = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        var eyeClosed = '<line x1="17.94" y1="11.12" x2="17.94" y2="11.12"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M6.62 6.62A13.64 13.64 0 0 0 1 12s4 8 11 8a9.13 9.13 0 0 0 5.38-1.62"/><line x1="2" y1="2" x2="22" y2="22"/>';
+
+        function makeToggle(btnId, inputId, iconId) {
+            var btn   = document.getElementById(btnId);
+            var input = document.getElementById(inputId);
+            var icon  = document.getElementById(iconId);
+            btn.addEventListener('click', function () {
+                var shown = input.type === 'text';
+                input.type = shown ? 'password' : 'text';
+                icon.innerHTML = shown ? eyeOpen : eyeClosed;
+            });
+        }
+
+        makeToggle('regPwToggle',        'password',         'regEyeIcon');
+        makeToggle('regConfirmPwToggle', 'confirm_password', 'regConfirmEyeIcon');
+    })();
+</script>
+{% endblock %}
