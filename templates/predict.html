@@ -5,6 +5,34 @@
 PixelCheck.{% endblock %}
 
 {% block extra_styles %}
+<style>
+    @keyframes shakeError {
+
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        20%,
+        60% {
+            transform: translateX(-8px);
+            border-color: #d32f2f;
+            background: rgba(211, 47, 47, 0.03);
+        }
+
+        40%,
+        80% {
+            transform: translateX(8px);
+            border-color: #d32f2f;
+            background: rgba(211, 47, 47, 0.03);
+        }
+    }
+
+    .shake-error {
+        animation: shakeError 0.5s ease;
+        border-color: #d32f2f !important;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -49,9 +77,9 @@ PixelCheck.{% endblock %}
         <img src="{{ url_for('static', filename='uploads/' + result.image_path) }}" alt="Analyzed image"
             class="analyzed-img">
 
-        <a href="{{ url_for('history') }}" class="history-btn history-link-compact">
-            📊 View History & Details
-        </a>
+        <button type="button" class="scan-another-btn" id="scanAnotherBtn">
+            🔄 Scan Another Image
+        </button>
     </div>
     {% endif %}
 
@@ -119,12 +147,33 @@ PixelCheck.{% endblock %}
         }
     });
 
-    uploadForm.addEventListener('submit', function () {
-        if (fileInput.files.length > 0) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Processing…';
-            loading.classList.add('active');
+    uploadForm.addEventListener('submit', function (e) {
+        if (fileInput.files.length === 0) {
+            e.preventDefault(); // Stop form submission
+            selectedFile.innerHTML = '<span style="color: #d32f2f; font-weight: 800; font-size: 1.05rem;">⚠ Please choose an image first!</span>';
+            fileDrop.classList.add('shake-error');
+            setTimeout(() => fileDrop.classList.remove('shake-error'), 500);
+            return;
         }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing…';
+        loading.classList.add('active');
     });
+
+    const scanAnotherBtn = document.getElementById('scanAnotherBtn');
+    if (scanAnotherBtn) {
+        scanAnotherBtn.addEventListener('click', function() {
+            const resultBox = document.querySelector('.result-box');
+            if (resultBox) {
+                resultBox.style.display = 'none';
+            }
+            uploadForm.reset();
+            selectedFile.textContent = '';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Analyze Image';
+            document.querySelector('.detector-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    }
 </script>
 {% endblock %}
