@@ -252,8 +252,19 @@ def predict():
         }
     
     # ── Fetch recent history ──
-    recent = AnalysisHistory.query.filter_by(user_id=current_user.id)\
-             .order_by(AnalysisHistory.analysed_at.desc()).limit(3).all()
+    all_recent = AnalysisHistory.query.filter_by(user_id=current_user.id)\
+                 .order_by(AnalysisHistory.analysed_at.desc()).all()
+    recent = []
+    dirty = False
+    for r in all_recent:
+        if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], r.image_path)):
+            if len(recent) < 3:
+                recent.append(r)
+        else:
+            db.session.delete(r)
+            dirty = True
+    if dirty:
+        db.session.commit()
              
     return render_template('predict.html', result=res, recent_history=recent)
 
@@ -263,7 +274,19 @@ def predict():
 def history():
     records = AnalysisHistory.query.filter_by(user_id=current_user.id)\
                 .order_by(AnalysisHistory.analysed_at.desc()).all()
-    return render_template('history.html', records=records)
+    
+    valid_records = []
+    dirty = False
+    for r in records:
+        if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], r.image_path)):
+            valid_records.append(r)
+        else:
+            db.session.delete(r)
+            dirty = True
+    if dirty:
+        db.session.commit()
+
+    return render_template('history.html', records=valid_records)
 
 # ── API Endpoint ─────────────────────────────────────────────────────────────
 @app.route('/api/predict', methods=['POST'])
