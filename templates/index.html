@@ -9,10 +9,15 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="hero">
-    <div class="hero-badge" data-aos="fade-down" data-aos-delay="100" style="transform: translateY(-20px); margin: 0 auto 10px auto; display: inline-flex; justify-content: center; text-align: center;">✦ Build for Swiggy & Zomato Integration</div>
+    <div class="hero-badge" data-aos="fade-down" data-aos-delay="100"
+        style="transform: translateY(-20px); margin: 0 auto 20px auto; display: flex; align-items: center; justify-content: center; gap: 15px; color: #ffffff; background: transparent; border: none; padding: 0; backdrop-filter: none; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <span style="height: 1px; width: 50px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8));"></span>
+        Built for Food Delivery Platforms
+        <span style="height: 1px; width: 50px; background: linear-gradient(270deg, transparent, rgba(255,255,255,0.8));"></span>
+    </div>
     <h2 data-aos="fade-up" data-aos-delay="200">Detect AI-Generated<br>Fraud Instantly</h2>
-    <p data-aos="fade-up" data-aos-delay="300">Restoring trust in digital transactions for platforms like Zomato and Swiggy with real-time image authenticity
-        verification.</p>
+    <p data-aos="fade-up" data-aos-delay="300">Restoring trust in digital transactions for delivery platforms with
+        real-time image authenticity verification.</p>
     <div class="cta-buttons" data-aos="zoom-in" data-aos-delay="400">
         {% if current_user.is_authenticated %}
         <a href="{{ url_for('predict') }}" class="btn btn-white">Go to Dashboard</a>
@@ -21,12 +26,46 @@
         <a href="{{ url_for('predict') }}" class="btn btn-outline">Try Demo</a>
         {% endif %}
     </div>
+
+    <div class="integration-logos" data-aos="fade-up" data-aos-delay="500"
+        style="margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+        
+        <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 1; margin: 0; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Seamless Integration With</p>
+        <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+            <span style="padding: 6px 20px 6px 6px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); backdrop-filter: blur(12px); font-size: 1.05rem; font-weight: 700; color: #fff; cursor: default;">
+                <img src="{{ url_for('static', filename='logos/zomato.jpeg') }}" alt="Zomato"
+                    style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.2);"> Zomato
+            </span>
+            <span style="padding: 6px 20px 6px 6px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 50px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); backdrop-filter: blur(12px); font-size: 1.05rem; font-weight: 700; color: #fff; cursor: default;">
+                <img src="{{ url_for('static', filename='logos/swiggy.jpeg') }}" alt="Swiggy"
+                    style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.2);"> Swiggy
+            </span>
+        </div>
+
+        <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9; margin: 2.5rem 0 0 0; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            Future Integrations (Quick Commerce)</p>
+        <div style="display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap;">
+            <span style="padding: 5px 16px 5px 5px; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 50px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img src="{{ url_for('static', filename='logos/blinkit.jpeg') }}" alt="Blinkit"
+                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.3);"> Blinkit
+            </span>
+            <span style="padding: 5px 16px 5px 5px; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 50px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img src="{{ url_for('static', filename='logos/zepto.jpeg') }}" alt="Zepto"
+                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.3);"> Zepto
+            </span>
+            <span style="padding: 5px 16px 5px 5px; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 50px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <img src="{{ url_for('static', filename='logos/instamart.jpeg') }}" alt="Instamart"
+                    style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.3);"> Instamart
+            </span>
+        </div>
+    </div>
 </section>
 
 <!-- Features Section -->
 <section class="features">
     <h3 data-aos="fade-up">Why PixelCheck?</h3>
-    <p class="features-subtitle" data-aos="fade-up" data-aos-delay="100">Enterprise-grade detection for food delivery, e-commerce, and beyond.</p>
+    <p class="features-subtitle" data-aos="fade-up" data-aos-delay="100">Enterprise-grade detection for food delivery,
+        e-commerce, and beyond.</p>
 
     <div class="feature-grid">
         <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
@@ -70,21 +109,56 @@
 
 <!-- Stats Section -->
 <section class="stats" data-aos="fade-up">
-    <div class="stats-grid">
+    <div class="stats-grid" id="stats-container">
         <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-            <h3>99.2%</h3>
-            <p>Accuracy Rate</p>
+            <h3><span class="count-up" data-target="99.2" data-decimals="1">0</span>%</h3>
+            <p>Detection Accuracy</p>
         </div>
         <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
-            <h3>2M+</h3>
+            <h3><span class="count-up" data-target="2" data-decimals="0">0</span>M+</h3>
             <p>Images Analyzed</p>
         </div>
         <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
-            <h3>&lt; 2s</h3>
-            <p>Processing Time</p>
+            <h3>&lt;<span class="count-up" data-target="2" data-decimals="0">0</span>s</h3>
+            <p>Analysis Speed</p>
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll('.count-up');
+    
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = +counter.getAttribute('data-target');
+                const decimals = +counter.getAttribute('data-decimals');
+                const duration = 2000; // ms
+                const steps = 60;
+                const stepTime = Math.abs(Math.floor(duration / steps));
+                let current = 0;
+                const increment = target / steps;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.innerText = target.toFixed(decimals);
+                        clearInterval(timer);
+                    } else {
+                        counter.innerText = current.toFixed(decimals);
+                    }
+                }, stepTime);
+                
+                obs.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+});
+</script>
 
 
 
@@ -95,24 +169,22 @@
         <div class="step-card" data-aos="fade-right" data-aos-delay="100">
             <div class="step-number">1</div>
             <h4>Upload Image</h4>
-            <p>Simply drag and drop or select any image file (JPG, PNG) that you want to verify for authenticity.</p>
+            <p>Drag & drop your image file (JPG, PNG) to verify.</p>
         </div>
         <div class="step-card" data-aos="fade-right" data-aos-delay="200">
             <div class="step-number">2</div>
             <h4>AI Analysis</h4>
-            <p>Our advanced neural networks analyze pixel patterns, artifacts, and generation signatures in
-                milliseconds.</p>
+            <p>Our model instantly detects pixel-level artifacts.</p>
         </div>
         <div class="step-card" data-aos="fade-right" data-aos-delay="300">
             <div class="step-number">3</div>
             <h4>Get Results</h4>
-            <p>Receive instant classification with a confidence score showing whether the image is AI-generated or
-                authentic.</p>
+            <p>Receive a real-time confidence score.</p>
         </div>
         <div class="step-card" data-aos="fade-right" data-aos-delay="400">
             <div class="step-number">4</div>
             <h4>Take Action</h4>
-            <p>Use the results to make informed decisions, flag suspicious content, or approve legitimate listings.</p>
+            <p>Make informed decisions to protect your platform.</p>
         </div>
     </div>
 </section>
@@ -122,32 +194,38 @@
     <h3 data-aos="fade-up">Who Benefits from PixelCheck?</h3>
     <div class="use-cases-grid">
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="100">
-            <h4>🍕 Food Delivery Platforms</h4>
+            <div class="use-case-icon">🍕</div>
+            <h4>Food Delivery Platforms</h4>
             <p>Prevent restaurants from using fake AI-generated food images that misrepresent their actual products.
                 Ensure customers see authentic photos of meals.</p>
         </div>
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="200">
-            <h4>🛒 E-Commerce Marketplaces</h4>
+            <div class="use-case-icon">🛒</div>
+            <h4>E-Commerce Marketplaces</h4>
             <p>Detect fraudulent product listings with AI-generated images. Protect buyers from scams and maintain
                 marketplace integrity.</p>
         </div>
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="300">
-            <h4>🏨 Travel & Hospitality</h4>
+            <div class="use-case-icon">🏨</div>
+            <h4>Travel & Hospitality</h4>
             <p>Verify that hotel and rental property photos are genuine, preventing customers from being misled by fake
                 images.</p>
         </div>
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="100">
-            <h4>📱 Social Media Platforms</h4>
+            <div class="use-case-icon">📱</div>
+            <h4>Social Media Platforms</h4>
             <p>Identify and flag synthetic media, deepfakes, and AI-generated content to combat misinformation and
                 fraud.</p>
         </div>
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="200">
-            <h4>📰 News & Media Organizations</h4>
+            <div class="use-case-icon">📰</div>
+            <h4>News & Media</h4>
             <p>Validate image authenticity before publication to maintain journalistic integrity and fact-checking
                 standards.</p>
         </div>
         <div class="use-case-card" data-aos="zoom-in-up" data-aos-delay="300">
-            <h4>🏢 Enterprise Security</h4>
+            <div class="use-case-icon">🏢</div>
+            <h4>Enterprise Security</h4>
             <p>Protect corporate communications and verify employee-submitted documents against AI-generated forgeries.
             </p>
         </div>
@@ -158,13 +236,13 @@
     <h3 data-aos="fade-up" data-aos-delay="100">Ready to Verify Image Authenticity?</h3>
     <p data-aos="fade-up" data-aos-delay="200">Join us to Protect your Businesses from AI-generated Fraud </p>
     <div data-aos="zoom-in" data-aos-delay="300">
-    {% if current_user.is_authenticated %}
-    <a href="{{ url_for('predict') }}" class="btn btn-white">Go to Dashboard</a>
-    {% else %}
-    <a href="{{ url_for('register') }}" class="btn btn-white">Start Free Trial</a>
-    {% endif %}
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('predict') }}" class="btn btn-white">Go to Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-white">Start Free Trial</a>
+        {% endif %}
     </div>
-</section>    
+</section>
 
 <script>
 </script>

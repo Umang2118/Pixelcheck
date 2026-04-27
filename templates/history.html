@@ -4,6 +4,59 @@
 {% block meta_description %}View all your previously analysed food images and their AI detection results.{% endblock %}
 
 {% block extra_styles %}
+<style>
+.history-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-bottom: 30px;
+    background: #fff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #eee;
+}
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.control-group label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #555;
+}
+.control-group select, .date-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    background: #fafafa;
+    color: #111;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
+}
+.control-group select:focus, .date-input:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+.date-range-group span {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+@media (max-width: 600px) {
+    .history-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .control-group {
+        justify-content: space-between;
+    }
+}
+</style>
 {% endblock %}
 
 
@@ -11,7 +64,7 @@
 <!-- Hero -->
 <section class="page-hero" style="position: relative;">
     <a href="{{ url_for('predict') }}" class="back-btn" id="backToDetectorBtn" style="position: absolute; top: 40px; left: 5%; font-size: 22px; padding: 8px 16px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">←</a>
-    <div class="hero-badge">🕘 Analysis History</div>
+
     <h1>Your Analysed Images</h1>
     <p>All images you have scanned with PixelCheck — newest first.</p>
 </section>
@@ -27,10 +80,37 @@
         <div class="stat-chip">Authentic: <span>{{ records | rejectattr('is_ai') | list | length }}</span></div>
     </div>
 
+    <!-- Controls -->
+    <div class="history-controls" data-aos="fade-up">
+        <div class="control-group date-range-group">
+            <label>Date Range:</label>
+            <input type="date" id="startDate" class="date-input">
+            <span>to</span>
+            <input type="date" id="endDate" class="date-input">
+        </div>
+        <div class="control-group">
+            <label for="filterVerdict">Filter:</label>
+            <select id="filterVerdict">
+                <option value="all">All Images</option>
+                <option value="ai">AI Generated</option>
+                <option value="real">Authentic</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="sortDate">Sort:</label>
+            <select id="sortDate">
+                <option value="desc">Newest First</option>
+                <option value="asc">Oldest First</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Grid -->
     <div class="history-grid">
         {% for r in records %}
-        <div class="history-card" style="--delay: {{ loop.index0 }}">
+        <div class="history-card" style="--delay: {{ loop.index0 }}" 
+             data-verdict="{{ 'ai' if r.is_ai else 'real' }}" 
+             data-timestamp="{{ r.analysed_at.timestamp() if r.analysed_at else 0 }}">
             <div class="card-img-wrap">
                 <img src="{{ url_for('static', filename='uploads/' + r.image_path) }}"
                      alt="{{ r.image_path }}"
@@ -64,4 +144,63 @@
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterVerdict = document.getElementById('filterVerdict');
+    const sortDate = document.getElementById('sortDate');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    const grid = document.querySelector('.history-grid');
+    if (!grid) return;
+    
+    // Store original cards
+    const cards = Array.from(grid.querySelectorAll('.history-card'));
+    
+    function updateGrid() {
+        const filterVal = filterVerdict.value;
+        const sortVal = sortDate.value;
+        const startVal = startDate.value ? new Date(startDate.value).setHours(0,0,0,0) : null;
+        const endVal = endDate.value ? new Date(endDate.value).setHours(23,59,59,999) : null;
+        
+        let visibleCards = [];
+        
+        // Apply Filter
+        cards.forEach(card => {
+            const verdict = card.getAttribute('data-verdict');
+            const timestamp = parseFloat(card.getAttribute('data-timestamp')) * 1000;
+            
+            let verdictMatch = (filterVal === 'all' || filterVal === verdict);
+            let dateMatch = true;
+            
+            if (startVal && timestamp < startVal) dateMatch = false;
+            if (endVal && timestamp > endVal) dateMatch = false;
+            
+            if (verdictMatch && dateMatch) {
+                card.style.display = '';
+                visibleCards.push(card);
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Apply Sort
+        visibleCards.sort((a, b) => {
+            const tA = parseFloat(a.getAttribute('data-timestamp'));
+            const tB = parseFloat(b.getAttribute('data-timestamp'));
+            return sortVal === 'desc' ? (tB - tA) : (tA - tB);
+        });
+        
+        // Re-append in sorted order
+        visibleCards.forEach(card => grid.appendChild(card));
+    }
+    
+    filterVerdict.addEventListener('change', updateGrid);
+    sortDate.addEventListener('change', updateGrid);
+    startDate.addEventListener('change', updateGrid);
+    endDate.addEventListener('change', updateGrid);
+});
+</script>
 {% endblock %}
