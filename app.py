@@ -1,5 +1,5 @@
 import os, sys, glob
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, \
 logout_user, current_user
@@ -215,17 +215,27 @@ def update_name():
 
 # ── Predict (Web UI) ─────────────────────────────────────────────────────────
 @app.route('/predict', methods=['GET', 'POST'])
-@login_required
 def predict():
     res = None
+    is_demo = not current_user.is_authenticated
+    demo_count = 0
+
+    if is_demo:
+        session.setdefault('demo_count', 0)
+        demo_count = session['demo_count']
+
     if request.method == 'POST':
+        if is_demo and demo_count >= 2:
+            flash('You have reached the free demo limit. Please create an account to access full potential.', 'error')
+            return render_template('predict.html', result=None, is_demo=is_demo, demo_count=demo_count)
+
         if AI_MODEL is None:
             flash('Model weights not found. Please train the model first.', 'error')
-            return render_template('predict.html', result=None)
+            return render_template('predict.html', result=None, is_demo=is_demo, demo_count=demo_count)
         f = request.files.get('file')
         if not f or f.filename == '':
             flash('No file selected.', 'error')
-            return render_template('predict.html', result=None)
+            return render_template('predict.html', result=None, is_demo=is_demo, demo_count=demo_count)
         path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
         f.save(path)
         img = AI_TRANSFORM(Image.open(path).convert("RGB")).unsqueeze(0).to(device)
@@ -235,38 +245,45 @@ def predict():
         conf = torch.nn.functional.softmax(out, dim=1)[0][pred.item()].item()
         label = "AI-Generated (Fake)" if pred.item() == 0 else "Real"
         conf_str = f"{conf*100:.2f}%"
-        # ── Save to history ──
-        record = AnalysisHistory(
-            user_id    = current_user.id,
-            image_path = secure_filename(f.filename),
-            label      = label,
-            confidence = conf_str,
-            is_ai      = (pred.item() == 0)
-        )
-        db.session.add(record)
-        db.session.commit()
+        
+        if current_user.is_authenticated:
+            # ── Save to history ──
+            record = AnalysisHistory(
+                user_id    = current_user.id,
+                image_path = secure_filename(f.filename),
+                label      = label,
+                confidence = conf_str,
+                is_ai      = (pred.item() == 0)
+            )
+            db.session.add(record)
+            db.session.commit()
+        else:
+            session['demo_count'] += 1
+            demo_count = session['demo_count']
+
         res = {
             'class': label,
             'confidence': conf_str,
             'image_path': secure_filename(f.filename)
         }
     
-    # ── Fetch recent history ──
-    all_recent = AnalysisHistory.query.filter_by(user_id=current_user.id)\
-                 .order_by(AnalysisHistory.analysed_at.desc()).all()
     recent = []
-    dirty = False
-    for r in all_recent:
-        if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], r.image_path)):
-            if len(recent) < 3:
-                recent.append(r)
-        else:
-            db.session.delete(r)
-            dirty = True
-    if dirty:
-        db.session.commit()
+    if current_user.is_authenticated:
+        # ── Fetch recent history ──
+        all_recent = AnalysisHistory.query.filter_by(user_id=current_user.id)\
+                     .order_by(AnalysisHistory.analysed_at.desc()).all()
+        dirty = False
+        for r in all_recent:
+            if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], r.image_path)):
+                if len(recent) < 3:
+                    recent.append(r)
+            else:
+                db.session.delete(r)
+                dirty = True
+        if dirty:
+            db.session.commit()
              
-    return render_template('predict.html', result=res, recent_history=recent)
+    return render_template('predict.html', result=res, recent_history=recent, is_demo=is_demo, demo_count=demo_count)
 
 # ── History ──────────────────────────────────────────────────────────────────
 @app.route('/history')

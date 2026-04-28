@@ -40,7 +40,7 @@
             </a>
             {% else %}
             <a href="{{ url_for('login') }}" class="nav-btn nav-btn-outline">Login</a>
-            <a href="{{ url_for('register') }}" class="nav-btn nav-btn-filled">Get Started</a>
+            <a href="{{ url_for('register') }}" class="nav-btn nav-btn-filled">Create Account</a>
             {% endif %}
         </div>
 
@@ -85,15 +85,18 @@
                 </ul>
             </div>
             <div class="footer-col">
+                {% if current_user.is_authenticated %}
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                </ul>
+                {% else %}
                 <h4>Account</h4>
                 <ul>
-                    {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-                    {% else %}
                     <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li><a href="{{ url_for('register') }}">Register</a></li>
-                    {% endif %}
+                    <li><a href="{{ url_for('register') }}">Create Account</a></li>
                 </ul>
+                {% endif %}
             </div>
             <div class="footer-col">
                 <h4>Legal</h4>
@@ -104,7 +107,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; 2025 <span>PixelCheck</span>. All rights reserved.</span>
+            <span>&copy; 2026 <span>PixelCheck</span>. All rights reserved.</span>
             <div class="footer-bottom-links">
                 <a href="{{ url_for('terms') }}">Terms</a>
                 <a href="{{ url_for('privacy') }}">Privacy</a>

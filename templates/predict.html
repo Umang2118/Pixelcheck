@@ -46,6 +46,13 @@ PixelCheck.{% endblock %}
 <div class="detector-card" data-aos="zoom-in" data-aos-delay="300">
 
     <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        {% if is_demo and demo_count >= 2 %}
+        <div style="text-align: center; padding: 25px; background: rgba(211, 47, 47, 0.05); border: 1px solid rgba(211, 47, 47, 0.2); border-radius: 12px; margin-bottom: 20px;">
+            <h3 style="color: #d32f2f; margin-bottom: 10px; font-size: 1.4rem;">Free Demo Limit Reached</h3>
+            <p style="margin-bottom: 20px; color: #555; font-size: 1.05rem;">You've analyzed the maximum of 2 images allowed in the free demo.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-primary" style="display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: 600;">Create an Account for Full Access</a>
+        </div>
+        {% else %}
         <div class="file-drop" id="fileDrop">
             <span class="upload-icon">📁</span>
             <input type="file" name="file" id="fileInput" accept=".jpg,.jpeg,.png" required>
@@ -61,7 +68,14 @@ PixelCheck.{% endblock %}
             <div class="spinner"></div>
             <p>Analyzing image with AI…</p>
         </div>
+        {% endif %}
     </form>
+
+    {% if is_demo and demo_count < 2 %}
+    <div style="text-align: center; margin-top: 15px;">
+        <p style="font-weight: 600; color: #666; font-size: 0.95rem;">Free Demo Mode: <strong style="color: #d32f2f;">{{ 2 - demo_count }}</strong> images left</p>
+    </div>
+    {% endif %}
 
     {% if result %}
     <div class="result-box">
@@ -83,13 +97,15 @@ PixelCheck.{% endblock %}
     </div>
     {% endif %}
 
+    {% if not is_demo %}
     <a href="{{ url_for('history') }}" class="history-btn" id="viewHistoryBtn">
         🕘 View All Analysed Images
     </a>
+    {% endif %}
 
 </div>
 
-{% if recent_history %}
+{% if not is_demo and recent_history %}
 <div class="recent-scans-header" data-aos="fade-up">
     <h3>Recent Analyses</h3>
     <a href="{{ url_for('history') }}" class="see-all-link">See All →</a>
