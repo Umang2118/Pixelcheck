@@ -51,8 +51,8 @@ PixelCheck is a full-stack platform designed to identify whether an image is aut
 ### Installation
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Umang2118/Fake-Ai-Image-Detection.git
-   cd Fake-Ai-Image-Detection
+   git clone https://github.com/Umang2118/Pixelcheck.git
+   cd PIXELCHECK
    ```
 
 2. **Create and activate a virtual environment (optional but recommended):**
