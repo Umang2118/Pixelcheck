@@ -43,7 +43,7 @@ def evaluate(model, loader, criterion, device):
         for inputs, labels in loader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
-            logits = outputs
+            logits = outputs.logits if hasattr(outputs, 'logits') else outputs
             loss = criterion(logits, labels)
             total_loss += loss.item() * inputs.size(0)
             preds = logits.argmax(dim=1)
@@ -90,14 +90,15 @@ def train_model(
 
                 with torch.amp.autocast("cuda", enabled=use_amp):
                     outputs = model(inputs)
-                    loss = criterion(outputs, labels)
+                    logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+                    loss = criterion(logits, labels)
 
                 scaler.scale(loss).backward()
                 scaler.step(optimizer)
                 scaler.update()
 
                 running_loss += loss.item() * inputs.size(0)
-                preds = outputs.argmax(dim=1)
+                preds = logits.argmax(dim=1)
                 correct += (preds == labels).sum().item()
                 total += inputs.size(0)
                 pbar.set_postfix(loss=f"{loss.item():.4f}")

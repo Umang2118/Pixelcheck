@@ -11,7 +11,11 @@ def evaluate_model(test_data_dir, device, weights_folder):
     model = get_model(device)
     
     # Load Latest Weights
-    weights = glob.glob(os.path.join(weights_folder, '*.pth'))[0]
+    candidates = glob.glob(os.path.join(weights_folder, '*.pth'))
+    weights = os.path.join(weights_folder, 'weights.pth')
+    if not os.path.exists(weights) and candidates:
+        weights = candidates[0]
+    
     model.load_state_dict(torch.load(weights, map_location=device)['model_state_dict'])
     
     model.eval()
@@ -20,7 +24,8 @@ def evaluate_model(test_data_dir, device, weights_folder):
         for inputs, labels in test_loader:
             inputs = inputs.to(device)
             outputs = model(inputs)
-            _, pred = outputs.logits.max(1)
+            logits = outputs.logits if hasattr(outputs, 'logits') else outputs
+            _, pred = logits.max(1)
             all_preds.extend(pred.cpu().numpy())
             all_labels.extend(labels.numpy())
             

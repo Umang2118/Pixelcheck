@@ -57,10 +57,13 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_ai_model():
     m = get_model(device)
-    pref = 'models/best_model.pth'
+    pref = 'models/weights.pth'
+    fallback = 'models/best_model.pth'
     candidates = glob.glob('models/*.pth')
     if os.path.exists(pref):
         weights = pref
+    elif os.path.exists(fallback):
+        weights = fallback
     elif candidates:
         weights = candidates[0]
     else:
@@ -241,8 +244,9 @@ def predict():
         img = AI_TRANSFORM(Image.open(path).convert("RGB")).unsqueeze(0).to(device)
         with torch.no_grad():
             out = AI_MODEL(img)
-            _, pred = out.max(1)
-        conf = torch.nn.functional.softmax(out, dim=1)[0][pred.item()].item()
+            logits = out.logits if hasattr(out, 'logits') else out
+            _, pred = logits.max(1)
+        conf = torch.nn.functional.softmax(logits, dim=1)[0][pred.item()].item()
         label = "AI-Generated (Fake)" if pred.item() == 0 else "Real"
         conf_str = f"{conf*100:.2f}%"
         
@@ -320,8 +324,9 @@ def api_predict():
         img = AI_TRANSFORM(Image.open(path).convert("RGB")).unsqueeze(0).to(device)
         with torch.no_grad():
             out = AI_MODEL(img)
-            _, pred = out.max(1)
-        conf = torch.nn.functional.softmax(out, dim=1)[0][pred.item()].item()
+            logits = out.logits if hasattr(out, 'logits') else out
+            _, pred = logits.max(1)
+        conf = torch.nn.functional.softmax(logits, dim=1)[0][pred.item()].item()
         label = "AI Generated" if pred.item() == 0 else "Real"
         is_fraud = pred.item() == 0
         return jsonify({
